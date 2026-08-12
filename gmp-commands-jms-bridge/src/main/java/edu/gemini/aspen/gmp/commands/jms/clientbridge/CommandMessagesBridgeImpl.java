@@ -42,6 +42,8 @@ public class CommandMessagesBridgeImpl implements CommandMessagesBridge {
     @Override
     public void onMessage(Message message) {
         try {
+            LOG.info("Gateway command message received: jmsMessageId=" + message.getJMSMessageID()
+                    + ", correlationId=" + message.getJMSCorrelationID());
             Command command = decodeMessage(message);
             sendCommandAndEvaluateResponse(command, message.getJMSCorrelationID());
         } catch (FormatException e) {
@@ -63,7 +65,9 @@ public class CommandMessagesBridgeImpl implements CommandMessagesBridge {
         CommandMessageParser messageParser = new CommandMessageParser(message);
         // For all kind of non valid messages readCommand will throw a FormatExcption
         Command command = messageParser.readCommand();
-        LOG.fine("New command arrived: " + command + " with correlationID " + message.getJMSCorrelationID());
+        LOG.info("Decoded gateway command: command=" + command
+                + ", jmsMessageId=" + message.getJMSMessageID()
+                + ", correlationId=" + message.getJMSCorrelationID());
         return command;
     }
 

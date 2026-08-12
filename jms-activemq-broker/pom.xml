@@ -40,6 +40,14 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>kahadb</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

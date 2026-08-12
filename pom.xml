@@ -41,6 +41,8 @@
         <!-- Component versions -->
         <clover.version>3.1.0</clover.version>
         <org.activemq.core.version>5.6.0</org.activemq.core.version>
+        <xstream.version>1.4.21</xstream.version>
+        <jettison.version>1.5.4</jettison.version>
         <pax-web.version>6.1.2</pax-web.version>
         <pax-logging.version>1.10.1</pax-logging.version>
         <pax-runner.version>1.9.0</pax-runner.version>
@@ -473,6 +475,22 @@
                 <artifactId>kahadb</artifactId>
                 <version>${org.activemq.core.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>${xstream.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.github.x-stream</groupId>
+                        <artifactId>mxparser</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jettison</groupId>
+                <artifactId>jettison</artifactId>
+                <version>${jettison.version}</version>
             </dependency>
 
             <!-- OSGI -->
@@ -919,6 +937,7 @@
         <module>gmp-heartbeat</module>
         <module>gmp-heartbeat-distributor-service</module>
         <module>giapi-tester</module>
+        <module>giapi-inst-benchmark</module>
         <module>gmp-top</module>
         <module>gmp-epics-to-status</module>
         <module>gds</module>

@@ -1,0 +1,177 @@
+[MAIN]
+fail-under=10
+ignore=CVS
+jobs=0
+persistent=no
+py-version=3.10
+recursive=yes
+source-roots=src
+suggestion-mode=yes
+
+[BASIC]
+argument-naming-style=camelCase
+attr-naming-style=camelCase
+class-attribute-naming-style=any
+class-const-naming-style=UPPER_CASE
+class-naming-style=PascalCase
+const-naming-style=UPPER_CASE
+function-naming-style=camelCase
+inlinevar-naming-style=any
+method-naming-style=camelCase
+module-naming-style=snake_case
+variable-naming-style=camelCase
+
+bad-names=foo,
+          bar,
+          baz,
+          toto,
+          tutu,
+          tata
+docstring-min-length=-1
+good-names=i,
+           j,
+           k,
+           ex,
+           Run,
+           id,
+           _
+include-naming-hint=yes
+no-docstring-rgx=^_
+property-classes=abc.abstractproperty
+
+[CLASSES]
+check-protected-access-in-special-methods=no
+defining-attr-methods=__init__,
+                      __new__,
+                      setUp,
+                      asyncSetUp,
+                      __post_init__
+exclude-protected=_asdict,_fields,_replace,_source,_make,os._exit
+valid-classmethod-first-arg=cls
+valid-metaclass-classmethod-first-arg=mcs
+
+[DESIGN]
+exclude-too-few-public-methods=
+ignored-parents=
+max-args=7
+max-attributes=12
+max-bool-expr=5
+max-branches=12
+max-locals=15
+max-parents=7
+max-public-methods=20
+max-returns=6
+max-statements=50
+min-public-methods=1
+
+[EXCEPTIONS]
+overgeneral-exceptions=builtins.BaseException,builtins.Exception
+
+[FORMAT]
+expected-line-ending-format=
+ignore-long-lines=^\s*(# )?<?https?://\S+>?$
+indent-after-paren=4
+indent-string='    '
+max-line-length=130
+max-module-lines=1000
+single-line-class-stmt=no
+single-line-if-stmt=no
+
+[IMPORTS]
+allow-any-import-level=
+allow-reexport-from-package=no
+allow-wildcard-with-all=no
+known-third-party=stomp
+
+[LOGGING]
+logging-format-style=old
+logging-modules=logging
+
+[MESSAGES CONTROL]
+confidence=HIGH,
+           CONTROL_FLOW,
+           INFERENCE,
+           INFERENCE_FAILURE,
+           UNDEFINED
+disable=raw-checker-failed,
+        bad-inline-option,
+        locally-disabled,
+        file-ignored,
+        suppressed-message,
+        useless-suppression,
+        deprecated-pragma,
+        use-symbolic-message-instead,
+        use-implicit-booleaness-not-comparison-to-string,
+        use-implicit-booleaness-not-comparison-to-zero,
+        missing-function-docstring,
+        too-few-public-methods
+enable=missing-class-docstring
+
+[METHOD_ARGS]
+timeout-methods=requests.api.delete,
+                requests.api.get,
+                requests.api.head,
+                requests.api.options,
+                requests.api.patch,
+                requests.api.post,
+                requests.api.put,
+                requests.api.request
+
+[MISCELLANEOUS]
+notes=FIXME,
+      XXX,
+      TODO
+
+[REFACTORING]
+max-nested-blocks=5
+never-returning-functions=sys.exit,argparse.parse_error
+suggest-join-with-non-empty-separator=yes
+
+[REPORTS]
+reports=no
+score=yes
+
+[SIMILARITIES]
+ignore-comments=yes
+ignore-docstrings=yes
+ignore-imports=yes
+ignore-signatures=yes
+min-similarity-lines=4
+
+[STRING]
+check-quote-consistency=no
+check-str-concat-over-line-jumps=no
+
+[TYPECHECK]
+contextmanager-decorators=contextlib.contextmanager
+generated-members=
+ignore-none=yes
+ignore-on-opaque-inference=yes
+ignored-checks-for-mixins=no-member,
+                          not-async-context-manager,
+                          not-context-manager,
+                          attribute-defined-outside-init
+ignored-classes=optparse.Values,
+                thread._local,
+                _thread._local,
+                argparse.Namespace
+missing-member-hint=yes
+missing-member-hint-distance=1
+missing-member-max-choices=1
+mixin-class-rgx=.*[Mm]ixin
+signature-mutators=
+
+[VARIABLES]
+additional-builtins=
+allow-global-unused-variables=yes
+allowed-redefined-builtins=
+callbacks=cb_,
+          _cb
+dummy-variables-rgx=_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_
+ignored-argument-names=_.*|^ignored_|^unused_
+init-import=no
+redefining-builtins-modules=six.moves,
+                           past.builtins,
+                           future.builtins,
+                           builtins,
+                           io
