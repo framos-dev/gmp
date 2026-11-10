@@ -117,6 +117,14 @@
             <artifactId>giapi-jms-util</artifactId>
         </dependency>
         <dependency>
+            <groupId>edu.gemini.aspen</groupId>
+            <artifactId>giapi-status-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>edu.gemini.jms</groupId>
+            <artifactId>jms-activemq-provider</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jms_1.1_spec</artifactId>
         </dependency>

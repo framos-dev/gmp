@@ -2023,3 +2023,5 @@ releases.properties
 .pax/
 
 .bloop/
+results/
+giapi-inst-benchmark/tools/

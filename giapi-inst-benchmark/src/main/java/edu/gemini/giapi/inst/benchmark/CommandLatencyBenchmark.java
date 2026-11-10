@@ -4,8 +4,15 @@ import edu.gemini.aspen.giapi.commands.Command;
 import edu.gemini.aspen.giapi.commands.Configuration;
 import edu.gemini.aspen.giapi.commands.HandlerResponse;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -37,6 +44,13 @@ final class CommandLatencyBenchmark {
         } else {
             samples = runParallel(command);
         }
+        Collections.sort(samples, new Comparator<CommandSample>() {
+            @Override
+            public int compare(CommandSample left, CommandSample right) {
+                return left.sampleNo - right.sampleNo;
+            }
+        });
+        writeCsv(samples);
 
         LatencyStats initialStats = new LatencyStats();
         LatencyStats endToEndStats = new LatencyStats();
@@ -146,11 +160,98 @@ final class CommandLatencyBenchmark {
                 + " parallel=" + args.getParallel()
                 + " warmup=" + args.getWarmup()
                 + " timeoutMs=" + args.getTimeout()
-                + " configEntries=" + args.getConfigCount());
+                + " configEntries=" + args.getConfigCount()
+                + " csv=" + optionalValue(args.getCsvFile())
+                + " runId=" + args.getRunId());
     }
 
     private boolean isFailure(HandlerResponse response) {
         return response.getResponse().equals(HandlerResponse.Response.ERROR)
                 || response.getResponse().equals(HandlerResponse.Response.NOANSWER);
+    }
+
+    private void writeCsv(List<CommandSample> samples) throws IOException {
+        if (args.getCsvFile() == null) {
+            return;
+        }
+        CommandCsvWriter csvWriter = new CommandCsvWriter(args.getCsvFile());
+        try {
+            for (CommandSample sample : samples) {
+                csvWriter.write(sample);
+            }
+        } finally {
+            csvWriter.close();
+        }
+    }
+
+    private String optionalValue(String value) {
+        return value == null ? "" : value;
+    }
+
+    private String contextValue(long value) {
+        return value >= 0 ? Long.toString(value) : "";
+    }
+
+    private final class CommandCsvWriter implements AutoCloseable {
+        private final PrintWriter writer;
+
+        CommandCsvWriter(String csvFile) throws IOException {
+            File file = new File(csvFile);
+            File parent = file.getParentFile();
+            if (parent != null) {
+                parent.mkdirs();
+            }
+            writer = new PrintWriter(new FileWriter(file));
+            writer.println("runId,command,activity,parallel,warmup,timeoutMs,configEntries,"
+                    + "statusItemCount,statusPostPeriodMs,sampleNo,startTimestampMs,endTimestampMs,"
+                    + "initialMs,endToEndMs,initialResponse,finalResponse,started,success,error");
+        }
+
+        void write(CommandSample sample) {
+            boolean success = !isFailure(sample.finalResponse);
+            writer.println(csv(args.getRunId())
+                    + "," + args.getSequenceCommand()
+                    + "," + csv(args.getActivity().getName())
+                    + "," + args.getParallel()
+                    + "," + args.getWarmup()
+                    + "," + args.getTimeout()
+                    + "," + args.getConfigCount()
+                    + "," + contextValue(args.getStatusItemCount())
+                    + "," + contextValue(args.getStatusPostPeriod())
+                    + "," + sample.sampleNo
+                    + "," + sample.startTimestampMs
+                    + "," + sample.endTimestampMs
+                    + "," + millis(sample.initialNanos)
+                    + "," + millis(sample.endToEndNanos)
+                    + "," + sample.initialResponse.getResponse().getTag()
+                    + "," + sample.finalResponse.getResponse().getTag()
+                    + "," + sample.started
+                    + "," + success
+                    + "," + csv(errorMessage(sample.finalResponse)));
+        }
+
+        @Override
+        public void close() {
+            writer.close();
+        }
+
+        private String errorMessage(HandlerResponse response) {
+            if (!isFailure(response)) {
+                return "";
+            }
+            return response.getMessage() == null ? "" : response.getMessage();
+        }
+
+        private String millis(long nanos) {
+            return String.format(Locale.US, "%.3f", nanos / 1000000.0);
+        }
+
+        private String csv(String value) {
+            if (value.indexOf(',') < 0 && value.indexOf('"') < 0
+                    && value.indexOf('\n') < 0 && value.indexOf('\r') < 0) {
+                return value;
+            }
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
     }
 }

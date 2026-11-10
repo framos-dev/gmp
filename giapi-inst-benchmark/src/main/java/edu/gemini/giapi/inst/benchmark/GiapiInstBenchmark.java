@@ -18,6 +18,8 @@ public final class GiapiInstBenchmark {
             }
             if ("command".equals(benchmarkArgs.getMode())) {
                 exitCode = new CommandLatencyBenchmark(benchmarkArgs).run();
+            } else if ("status".equals(benchmarkArgs.getMode())) {
+                exitCode = new StatusIntervalBenchmark(benchmarkArgs).run();
             } else {
                 System.err.println("Unknown benchmark mode: " + benchmarkArgs.getMode());
                 System.err.println(BenchmarkArgs.usage());

@@ -50,6 +50,7 @@ final class JmsCommandClient implements AutoCloseable {
                 replyQueue,
                 "JMSCorrelationID='" + correlationID + "'");
         try {
+            long startTimestampMs = System.currentTimeMillis();
             long startNanos = System.nanoTime();
             sendRequest(command, correlationID);
             HandlerResponse initialResponse = readInitialResponse(replyConsumer, timeout);
@@ -63,7 +64,16 @@ final class JmsCommandClient implements AutoCloseable {
                 finalResponse = completionInformation.getHandlerResponse();
                 endToEndNanos = System.nanoTime() - startNanos;
             }
-            return new CommandSample(sampleNo, finalResponse, initialNanos, endToEndNanos, started);
+            long endTimestampMs = System.currentTimeMillis();
+            return new CommandSample(
+                    sampleNo,
+                    startTimestampMs,
+                    endTimestampMs,
+                    initialResponse,
+                    finalResponse,
+                    initialNanos,
+                    endToEndNanos,
+                    started);
         } finally {
             replyConsumer.close();
         }
